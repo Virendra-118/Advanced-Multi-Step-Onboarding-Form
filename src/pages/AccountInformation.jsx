@@ -77,8 +77,11 @@
 import { useState } from "react";
 import StepIndicator from "../components/StepIndicator";
 import FormField from "../components/FormField";
+import { validateAccountForm } from "../utils/validation";
 
 function AccountInformation({ onBack, onNext }) {
+
+    const [errors, setErrors] = useState({});
   const [formData, setFormData] = useState({
     fullName: "",
     email: "",
@@ -94,13 +97,28 @@ function AccountInformation({ onBack, onNext }) {
     });
   }
 
-  function handleSubmit(e) {
-    e.preventDefault();
+//   function handleSubmit(e) {
+//     e.preventDefault();
 
-    console.log("Account Information:", formData);
+//     console.log("Account Information:", formData);
 
-    onNext();
+//     onNext();
+//   }
+
+function handleSubmit(e) {
+  e.preventDefault();
+
+  const validationErrors = validateAccountForm(formData);
+
+  setErrors(validationErrors);
+
+  if (Object.keys(validationErrors).length > 0) {
+    return;
   }
+
+  console.log("Account Information:", formData);
+  onNext();
+}
 
   return (
     <div className="flex min-h-screen items-center justify-center bg-slate-50 p-4 md:p-8">
@@ -128,6 +146,7 @@ function AccountInformation({ onBack, onNext }) {
               value={formData.fullName}
               onChange={handleChange}
               required
+              error={errors.fullName}
             />
 
             <FormField
@@ -138,6 +157,7 @@ function AccountInformation({ onBack, onNext }) {
               value={formData.email}
               onChange={handleChange}
               required
+              error={errors.email}
             />
 
             <FormField
@@ -148,6 +168,7 @@ function AccountInformation({ onBack, onNext }) {
               value={formData.password}
               onChange={handleChange}
               required
+              error={errors.password}
             />
           </div>
 

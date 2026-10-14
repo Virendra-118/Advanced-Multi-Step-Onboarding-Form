@@ -6,6 +6,7 @@ function FormField({
   value,
   onChange,
   required = false,
+  error,
 }) {
   return (
     <div className="w-full">
@@ -14,7 +15,9 @@ function FormField({
         className="mb-2 block text-sm font-medium text-slate-700"
       >
         {label}
-        {required && <span className="ml-1 text-red-500">*</span>}
+        {required && (
+          <span className="ml-1 text-red-500">*</span>
+        )}
       </label>
 
       <input
@@ -25,8 +28,19 @@ function FormField({
         onChange={onChange}
         placeholder={placeholder}
         required={required}
-        className="w-full rounded-lg border border-slate-300 px-4 py-3 text-sm outline-none focus:border-blue-500 focus:ring-2 focus:ring-blue-100"
+        aria-invalid={Boolean(error)}
+        className={`w-full rounded-lg border px-4 py-3 text-sm outline-none focus:ring-2 ${
+          error
+            ? "border-red-500 focus:border-red-500 focus:ring-red-100"
+            : "border-slate-300 focus:border-blue-500 focus:ring-blue-100"
+        }`}
       />
+
+      {error && (
+        <p className="mt-1 text-sm text-red-500">
+          {error}
+        </p>
+      )}
     </div>
   );
 }

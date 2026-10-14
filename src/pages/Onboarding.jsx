@@ -1,5 +1,4 @@
 import welcomeImage from "../assets/Project_Welcome_page.jpg";
-
 function Onboarding({ onGetStarted }) {
   const steps = [
     "Create your account",
@@ -20,9 +19,17 @@ function Onboarding({ onGetStarted }) {
 
           {/* Welcome Content */}
           <div>
-            <h2 className="text-3xl font-bold text-blue-950">
-              Welcome to DevFlow!
-            </h2>
+           
+<h2
+  className="text-3xl font-extrabold tracking-tight
+  text-transparent bg-clip-text
+  bg-gradient-to-r from-slate-900 via-blue-800 to-blue-500
+  transition-all duration-300
+  hover:from-blue-700 hover:to-indigo-500"
+>
+  Welcome to DevFlow!
+</h2>
+
 
             <p className="mt-3 text-sm leading-6 text-slate-500">
               Let's get you set up. It only takes a few minutes
