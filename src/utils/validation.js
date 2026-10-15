@@ -1,5 +1,5 @@
 export function validateAccountForm(formData) { 
-    console.log("Validating form data:", formData);
+    // console.log("Validating form data:", formData);
   const errors = {};
 
   if (!formData.fullName.trim()) {
