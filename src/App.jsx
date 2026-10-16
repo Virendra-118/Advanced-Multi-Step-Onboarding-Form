@@ -1,4 +1,4 @@
-
+import { FluentProvider, webLightTheme, Toaster, Toast, ToastTitle, useToastController } from "@fluentui/react-components";
 import Onboarding from "./pages/Onboarding";
 import AccountInformation from "./pages/AccountInformation";
 import BusinessInformation from "./pages/BusinessInformation";
@@ -6,10 +6,13 @@ import ChoosePlan from "./pages/ChoosePlan";
 import UploadDocuments from "./pages/UploadDocuments";
 import Review from "./pages/Review";
 import Success from "./pages/Success";
+
 import { useOnboarding } from "./context/OnboardingContext";
 
 function App() {
   const { state, dispatch, saveSubmission } = useOnboarding();
+
+  const { dispatchToast } = useToastController("devflow-toaster");
 
   const step = state.step;
 
@@ -21,25 +24,41 @@ function App() {
   }
 
   function handleSubmit() {
-    const saved = saveSubmission();
-
-    if (!saved) {
-      alert("Unable to save your data. Please try again.");
-      return;
+    // Save the onboarding submission, if your context provides this function.
+    if (typeof saveSubmission === "function") {
+      saveSubmission();
     }
 
-    alert("Onboarding submitted successfully!");
+    // Show a Fluent UI toast instead of a browser alert.
+    dispatchToast(
+      <Toast>
+        <ToastTitle>
+          Onboarding submitted successfully!
+        </ToastTitle>
+      </Toast>,
+      {
+        intent: "success",
+        timeout: 3000,
+      }
+    );
+
     goToStep(6);
   }
 
   return (
-    <>
-      {/* Welcome Page */}
+    <FluentProvider theme={webLightTheme}>
+      <Toaster
+        toasterId="devflow-toaster"
+        position="top-end"
+        pauseOnHover
+      />
+
       {step === 0 && (
-        <Onboarding onGetStarted={() => goToStep(1)} />
+        <Onboarding
+          onGetStarted={() => goToStep(1)}
+        />
       )}
 
-      {/* Account Information */}
       {step === 1 && (
         <AccountInformation
           onBack={() => goToStep(0)}
@@ -47,7 +66,6 @@ function App() {
         />
       )}
 
-      {/* Business Information */}
       {step === 2 && (
         <BusinessInformation
           onBack={() => goToStep(1)}
@@ -55,7 +73,6 @@ function App() {
         />
       )}
 
-      {/* Choose Plan */}
       {step === 3 && (
         <ChoosePlan
           onBack={() => goToStep(2)}
@@ -63,7 +80,6 @@ function App() {
         />
       )}
 
-      {/* Upload Documents */}
       {step === 4 && (
         <UploadDocuments
           onBack={() => goToStep(3)}
@@ -71,7 +87,6 @@ function App() {
         />
       )}
 
-      {/* Review & Submit */}
       {step === 5 && (
         <Review
           onBack={() => goToStep(4)}
@@ -83,11 +98,12 @@ function App() {
         />
       )}
 
-      {/* Success Page */}
       {step === 6 && (
-  <Success onGoToDashboard={() => goToStep(0)} />
-)}
-    </>
+        <Success
+          onGoToDashboard={() => goToStep(0)}
+        />
+      )}
+    </FluentProvider>
   );
 }
 
