@@ -40,80 +40,103 @@ function ChoosePlan({ onBack, onNext }) {
   }
 
   return (
-    <div className="flex min-h-screen items-center justify-center bg-slate-50 p-4">
-      <div className="w-full max-w-5xl rounded-2xl border border-blue-100 bg-white p-6 shadow-sm md:p-10">
+    <div className="flex min-h-screen items-center justify-center bg-slate-50 px-4 py-6 sm:px-6 lg:p-8">
+      <div className="w-full max-w-4xl rounded-2xl border border-blue-100 bg-white p-5 shadow-sm sm:p-6 lg:p-8">
+
+        {/* Step Indicator */}
         <StepIndicator currentStep={2} />
 
-        <h1 className="mt-8 text-2xl font-bold text-blue-950">
-          Select your plan
-        </h1>
+        {/* Heading */}
+        <div className="mt-6">
+          <h1 className="text-2xl font-bold text-blue-950">
+            Select your plan
+          </h1>
 
-        <p className="mt-2 text-sm text-slate-500">
-          Choose the plan that fits your needs.
-        </p>
-
-        <div className="mt-8 grid grid-cols-1 gap-5 sm:grid-cols-3">
-          {plans.map((plan) => (
-            <div
-              key={plan.name}
-              onClick={() => handleSelectPlan(plan.name)}
-              className={`cursor-pointer rounded-xl border p-5 ${
-                selectedPlan === plan.name
-                  ? "border-blue-600 bg-blue-50"
-                  : "border-slate-200 hover:border-blue-300"
-              }`}
-            >
-              {plan.name === "Pro" && (
-                <p className="mb-2 text-xs font-semibold text-blue-600">
-                  MOST POPULAR
-                </p>
-              )}
-
-              <h2 className="text-lg font-semibold text-blue-950">
-                {plan.name}
-              </h2>
-
-              <p className="mt-3 text-3xl font-bold text-blue-950">
-                {plan.price}
-                <span className="text-sm font-normal text-slate-500">
-                  /month
-                </span>
-              </p>
-
-              <ul className="mt-5 space-y-3">
-                {plan.features.map((feature) => (
-                  <li key={feature} className="text-sm text-slate-600">
-                    <span className="mr-2 text-emerald-500">✓</span>
-                    {feature}
-                  </li>
-                ))}
-              </ul>
-
-              <button
-                type="button"
-                onClick={(e) => {
-                  e.stopPropagation();
-                  handleSelectPlan(plan.name);
-                }}
-                className={`mt-6 w-full rounded-lg px-4 py-2 text-sm font-semibold ${
-                  selectedPlan === plan.name
-                    ? "bg-blue-600 text-white"
-                    : "border border-slate-200 text-blue-600"
-                }`}
-              >
-                {selectedPlan === plan.name
-                  ? "Selected"
-                  : "Select Plan"}
-              </button>
-            </div>
-          ))}
+          <p className="mt-2 text-sm text-slate-500">
+            Choose the plan that fits your needs.
+          </p>
         </div>
 
-        <div className="mt-8 flex justify-between border-t border-slate-100 pt-6">
+        {/* Plan Cards */}
+        <div className="mt-8 grid grid-cols-1 items-stretch gap-5 sm:grid-cols-3 sm:gap-4 lg:gap-5">
+          {plans.map((plan) => {
+            const isSelected = selectedPlan === plan.name;
+            const isPopular = plan.name === "Pro";
+
+            return (
+              <div
+                key={plan.name}
+                onClick={() => handleSelectPlan(plan.name)}
+                className={`relative flex min-w-0 cursor-pointer flex-col rounded-xl border-2 p-4 transition-all duration-200 sm:p-4 lg:p-5 ${
+                  isSelected
+                    ? "border-blue-600 bg-blue-50 shadow-sm"
+                    : "border-slate-200 bg-white hover:border-blue-300"
+                }`}
+              >
+                {/* Most Popular Badge */}
+                {isPopular && (
+                  <span className="absolute left-1/2 top-0 z-10 -translate-x-1/2 -translate-y-1/2 whitespace-nowrap rounded-md bg-blue-600 px-3 py-1 text-[11px] font-semibold text-white shadow-sm">
+                    Most Popular
+                  </span>
+                )}
+
+                {/* Plan Name */}
+                <h2 className="text-base font-semibold text-blue-950 lg:text-lg">
+                  {plan.name}
+                </h2>
+
+                {/* Price */}
+                <div className="mt-3 flex items-baseline gap-1">
+                  <span className="text-3xl font-bold tracking-tight text-blue-950">
+                    {plan.price}
+                  </span>
+                  <span className="text-xs text-slate-500">
+                    /month
+                  </span>
+                </div>
+
+                {/* Features */}
+                <ul className="mt-5 flex-1 space-y-3">
+                  {plan.features.map((feature) => (
+                    <li
+                      key={feature}
+                      className="flex items-start gap-2 text-sm leading-5 text-slate-600"
+                    >
+                      <span className="shrink-0 font-semibold text-emerald-500">
+                        ✓
+                      </span>
+                      <span>{feature}</span>
+                    </li>
+                  ))}
+                </ul>
+
+                {/* Select Button */}
+                <button
+                  type="button"
+                  onClick={(e) => {
+                    e.stopPropagation();
+                    handleSelectPlan(plan.name);
+                  }}
+                  aria-pressed={isSelected}
+                  className={`mt-6 w-full rounded-lg px-3 py-2.5 text-sm font-semibold transition focus:outline-none focus:ring-4 focus:ring-blue-100 ${
+                    isSelected
+                      ? "border border-blue-600 bg-blue-600 text-white hover:bg-blue-700"
+                      : "border border-slate-200 bg-white text-blue-600 hover:border-blue-500 hover:bg-blue-50"
+                  }`}
+                >
+                  {isSelected ? "Selected" : "Select Plan"}
+                </button>
+              </div>
+            );
+          })}
+        </div>
+
+        {/* Navigation */}
+        <div className="mt-7 flex items-center justify-between gap-4 border-t border-slate-100 pt-5">
           <button
             type="button"
             onClick={onBack}
-            className="text-sm font-medium text-blue-600"
+            className="rounded-lg px-1 py-2 text-sm font-medium text-blue-600 transition hover:text-blue-800"
           >
             ← Back
           </button>
@@ -121,7 +144,7 @@ function ChoosePlan({ onBack, onNext }) {
           <button
             type="button"
             onClick={onNext}
-            className="rounded-lg bg-blue-600 px-7 py-3 text-sm font-semibold text-white hover:bg-blue-700"
+            className="rounded-lg bg-blue-600 px-6 py-2.5 text-sm font-semibold text-white transition hover:bg-blue-700 focus:outline-none focus:ring-4 focus:ring-blue-100"
           >
             Next →
           </button>

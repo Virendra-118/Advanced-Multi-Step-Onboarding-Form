@@ -33,19 +33,22 @@ function BusinessInformation({ onBack, onNext }) {
   }
 
   const selectClass =
-    "w-full rounded-lg border border-slate-300 bg-white px-3 py-3 text-sm outline-none focus:border-blue-500 focus:ring-2 focus:ring-blue-100";
+    "w-full rounded-lg border border-slate-300 bg-white px-3 py-3 text-sm outline-none transition focus:border-blue-500 focus:ring-2 focus:ring-blue-100";
 
   return (
-    <div className="flex min-h-screen items-center justify-center bg-slate-50 p-4 md:p-8">
-      <div className="w-full max-w-4xl rounded-2xl border border-blue-100 bg-white p-6 shadow-sm md:p-10">
+    <div className="flex min-h-screen items-center justify-center bg-slate-50 px-4 py-6 sm:px-6 lg:p-8">
+      <div className="w-full max-w-3xl rounded-2xl border border-blue-100 bg-white p-5 shadow-sm sm:p-6 lg:p-8">
+
+        {/* Step Indicator */}
         <StepIndicator currentStep={1} />
 
-        <div className="mt-8">
+        {/* Heading */}
+        <div className="mt-6">
           <h1 className="text-2xl font-bold text-blue-950">
             Tell us about your business
           </h1>
 
-          <p className="mt-2 text-sm text-slate-500">
+          <p className="mt-2 text-sm leading-6 text-slate-500">
             This helps us tailor the best experience for you.
           </p>
         </div>
@@ -58,6 +61,7 @@ function BusinessInformation({ onBack, onNext }) {
                 key={type}
                 type="button"
                 onClick={() => handleAccountTypeChange(type)}
+                aria-pressed={businessData.accountType === type}
                 className={`flex items-center gap-2 rounded-lg border p-3 text-sm font-medium transition ${
                   businessData.accountType === type
                     ? "border-blue-500 bg-blue-50 text-blue-700"
@@ -65,7 +69,7 @@ function BusinessInformation({ onBack, onNext }) {
                 }`}
               >
                 <span
-                  className={`flex h-4 w-4 items-center justify-center rounded-full border ${
+                  className={`flex h-4 w-4 shrink-0 items-center justify-center rounded-full border ${
                     businessData.accountType === type
                       ? "border-blue-600"
                       : "border-slate-300"
@@ -81,7 +85,8 @@ function BusinessInformation({ onBack, onNext }) {
             ))}
           </div>
 
-          <div className="mt-6 space-y-5">
+          {/* Business Details */}
+          <div className="mt-5 space-y-4">
             <FormField
               label={
                 businessData.accountType === "Business"
@@ -107,8 +112,7 @@ function BusinessInformation({ onBack, onNext }) {
                     htmlFor="companySize"
                     className="mb-2 block text-sm font-medium text-slate-700"
                   >
-                    Company Size{" "}
-                    <span className="text-red-500">*</span>
+                    Company Size <span className="text-red-500">*</span>
                   </label>
 
                   <select
@@ -134,8 +138,7 @@ function BusinessInformation({ onBack, onNext }) {
                     htmlFor="industry"
                     className="mb-2 block text-sm font-medium text-slate-700"
                   >
-                    Industry{" "}
-                    <span className="text-red-500">*</span>
+                    Industry <span className="text-red-500">*</span>
                   </label>
 
                   <select
@@ -160,18 +163,18 @@ function BusinessInformation({ onBack, onNext }) {
           </div>
 
           {/* Navigation */}
-          <div className="mt-8 flex items-center justify-between border-t border-slate-100 pt-6">
+          <div className="mt-7 flex items-center justify-between gap-4 border-t border-slate-100 pt-5">
             <button
               type="button"
               onClick={onBack}
-              className="text-sm font-medium text-blue-600 hover:text-blue-800"
+              className="rounded-lg border border-slate-200 px-5 py-2.5 text-sm font-medium text-slate-600 transition hover:bg-slate-50"
             >
-              Back
+              ← Back
             </button>
 
             <button
               type="submit"
-              className="rounded-lg bg-blue-600 px-7 py-3 text-sm font-semibold text-white transition hover:bg-blue-700"
+              className="rounded-lg bg-blue-600 px-6 py-2.5 text-sm font-semibold text-white transition hover:bg-blue-700 focus:outline-none focus:ring-4 focus:ring-blue-100"
             >
               Next →
             </button>

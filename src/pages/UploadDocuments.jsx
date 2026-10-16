@@ -19,21 +19,25 @@ function UploadDocuments({ onBack, onNext }) {
   }
 
   return (
-    <div className="flex min-h-screen items-center justify-center bg-slate-50 p-4 md:p-8">
-      <div className="w-full max-w-4xl rounded-2xl border border-blue-100 bg-white p-6 shadow-sm md:p-10">
+    <div className="flex min-h-screen items-center justify-center bg-slate-50 px-4 py-6 sm:px-6 lg:p-8">
+      <div className="w-full max-w-3xl rounded-2xl border border-blue-100 bg-white p-5 shadow-sm sm:p-6 lg:p-8">
+
+        {/* Step Indicator */}
         <StepIndicator currentStep={3} />
 
-        <div className="mt-8">
+        {/* Heading */}
+        <div className="mt-6">
           <h1 className="text-2xl font-bold text-blue-950">
             Upload your documents
           </h1>
 
-          <p className="mt-2 text-sm text-slate-500">
-            Select the documents required to complete your profile.
+          <p className="mt-2 text-sm leading-6 text-slate-500">
+            Securely upload the required documents.
           </p>
         </div>
 
-        <div className="mt-7">
+        {/* File Upload */}
+        <div className="mt-6">
           <FileUpload
             label="Upload Documents"
             files={files}
@@ -41,11 +45,12 @@ function UploadDocuments({ onBack, onNext }) {
           />
         </div>
 
-        <div className="mt-8 flex justify-between border-t border-slate-100 pt-6">
+        {/* Navigation */}
+        <div className="mt-7 flex items-center justify-between gap-4 border-t border-slate-100 pt-5">
           <button
             type="button"
             onClick={onBack}
-            className="text-sm font-medium text-blue-600 hover:text-blue-800"
+            className="rounded-lg border border-slate-200 px-5 py-2.5 text-sm font-medium text-slate-600 transition hover:bg-slate-50"
           >
             ← Back
           </button>
@@ -53,7 +58,7 @@ function UploadDocuments({ onBack, onNext }) {
           <button
             type="button"
             onClick={handleSubmit}
-            className="rounded-lg bg-blue-600 px-7 py-3 text-sm font-semibold text-white hover:bg-blue-700"
+            className="rounded-lg bg-blue-600 px-6 py-2.5 text-sm font-semibold text-white transition hover:bg-blue-700 focus:outline-none focus:ring-4 focus:ring-blue-100"
           >
             Next →
           </button>

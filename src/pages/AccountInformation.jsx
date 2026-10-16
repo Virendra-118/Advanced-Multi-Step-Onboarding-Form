@@ -7,9 +7,42 @@ import { useOnboarding } from "../context/OnboardingContext";
 
 function AccountInformation({ onBack, onNext }) {
   const { state, dispatch } = useOnboarding();
+
   const [errors, setErrors] = useState({});
+  const [showPassword, setShowPassword] = useState(false);
 
   const formData = state.accountData;
+  const password = formData.password || "";
+
+  // Check password requirements
+  const passwordChecks = [
+    password.length >= 8,
+    /[A-Z]/.test(password),
+    /[a-z]/.test(password),
+    /[0-9]/.test(password),
+    /[^A-Za-z0-9]/.test(password),
+  ];
+
+  const strengthScore = passwordChecks.filter(Boolean).length;
+
+  let strength = "";
+  let strengthColor = "bg-slate-200";
+  let strengthWidth = "0%";
+
+  if (password) {
+    strengthWidth = `${(strengthScore / 5) * 100}%`;
+
+    if (strengthScore <= 2) {
+      strength = "Weak";
+      strengthColor = "bg-red-500";
+    } else if (strengthScore <= 4) {
+      strength = "Medium";
+      strengthColor = "bg-amber-500";
+    } else {
+      strength = "Strong";
+      strengthColor = "bg-emerald-500";
+    }
+  }
 
   function handleChange(e) {
     const { name, value } = e.target;
@@ -39,22 +72,26 @@ function AccountInformation({ onBack, onNext }) {
   }
 
   return (
-    <div className="flex min-h-screen items-center justify-center bg-slate-50 p-4 md:p-8">
-      <div className="w-full max-w-4xl rounded-2xl border border-blue-100 bg-white p-6 shadow-sm md:p-10">
+    <div className="flex min-h-screen items-center justify-center bg-slate-50 px-4 py-6 sm:px-6 lg:p-8">
+      <div className="w-full max-w-3xl rounded-2xl border border-blue-100 bg-white p-5 shadow-sm sm:p-6 lg:p-8">
+
+        {/* Step Indicator */}
         <StepIndicator currentStep={0} />
 
-        <div className="mt-8">
+        {/* Heading */}
+        <div className="mt-6">
           <h1 className="text-2xl font-bold text-blue-950">
             Create your account
           </h1>
 
-          <p className="mt-2 text-sm text-slate-500">
+          <p className="mt-2 text-sm leading-6 text-slate-500">
             Let's set up your basic information.
           </p>
         </div>
 
+        {/* Account Form */}
         <form onSubmit={handleSubmit}>
-          <div className="mt-7 space-y-5">
+          <div className="mt-6 space-y-4">
             <FormField
               label="Full Name"
               name="fullName"
@@ -77,30 +114,138 @@ function AccountInformation({ onBack, onNext }) {
               error={errors.email}
             />
 
-            <FormField
-              label="Password"
-              name="password"
-              type="password"
-              placeholder="Enter your password"
-              value={formData.password}
-              onChange={handleChange}
-              required
-              error={errors.password}
-            />
+            {/* Password Field */}
+            <div className="w-full">
+              <label
+                htmlFor="password"
+                className="mb-2 block text-sm font-medium text-slate-700"
+              >
+                Password <span className="text-red-500">*</span>
+              </label>
+
+              <div className="relative">
+                <input
+                  id="password"
+                  name="password"
+                  type={showPassword ? "text" : "password"}
+                  value={password}
+                  onChange={handleChange}
+                  placeholder="Enter your password"
+                  required
+                  autoComplete="new-password"
+                  aria-invalid={Boolean(errors.password)}
+                  className={`w-full appearance-none rounded-lg border px-4 py-3 pr-12 text-sm outline-none focus:ring-2 [&::-ms-reveal]:hidden [&::-webkit-credentials-auto-fill-button]:hidden ${
+                    errors.password
+                      ? "border-red-500 focus:border-red-500 focus:ring-red-100"
+                      : "border-slate-300 focus:border-blue-500 focus:ring-blue-100"
+                  }`}
+                />
+
+                {/* Single Show/Hide Button */}
+                <button
+                  type="button"
+                  onClick={() => setShowPassword((previous) => !previous)}
+                  aria-label={showPassword ? "Hide password" : "Show password"}
+                  aria-pressed={showPassword}
+                  className="absolute inset-y-0 right-3 flex items-center text-slate-500 transition hover:text-blue-600 focus:outline-none"
+                >
+                  {showPassword ? (
+                    /* Eye-off icon */
+                    <svg
+                      xmlns="http://www.w3.org/2000/svg"
+                      viewBox="0 0 24 24"
+                      fill="none"
+                      stroke="currentColor"
+                      strokeWidth="1.8"
+                      strokeLinecap="round"
+                      strokeLinejoin="round"
+                      className="h-5 w-5"
+                      aria-hidden="true"
+                    >
+                      <path d="M3 3l18 18" />
+                      <path d="M10.6 10.6a2 2 0 002.8 2.8" />
+                      <path d="M9.9 5.2A10.7 10.7 0 0112 5c5 0 8.5 4.5 9 7-.2 1.2-1.2 2.7-2.7 4" />
+                      <path d="M6.2 6.2C3.9 7.7 2.3 10 2 12c.5 2.5 4 7 10 7 1.1 0 2.1-.2 3-.5" />
+                    </svg>
+                  ) : (
+                    /* Eye icon */
+                    <svg
+                      xmlns="http://www.w3.org/2000/svg"
+                      viewBox="0 0 24 24"
+                      fill="none"
+                      stroke="currentColor"
+                      strokeWidth="1.8"
+                      strokeLinecap="round"
+                      strokeLinejoin="round"
+                      className="h-5 w-5"
+                      aria-hidden="true"
+                    >
+                      <path d="M2 12s3.5-7 10-7 10 7 10 7-3.5 7-10 7S2 12 2 12z" />
+                      <circle cx="12" cy="12" r="3" />
+                    </svg>
+                  )}
+                </button>
+              </div>
+
+              {/* Password Strength Indicator */}
+              {password && (
+                <div className="mt-2">
+                  <div
+                    className="h-1 w-full overflow-hidden rounded-full bg-slate-200"
+                    role="progressbar"
+                    aria-label="Password strength"
+                    aria-valuemin={0}
+                    aria-valuemax={5}
+                    aria-valuenow={strengthScore}
+                  >
+                    <div
+                      className={`h-full rounded-full transition-all duration-300 ${strengthColor}`}
+                      style={{ width: strengthWidth }}
+                    />
+                  </div>
+
+                  <div className="mt-1 flex items-center justify-between">
+                    <span className="text-xs text-slate-400">
+                      Password strength
+                    </span>
+
+                    <span
+                      className={`text-xs font-semibold ${
+                        strength === "Weak"
+                          ? "text-red-500"
+                          : strength === "Medium"
+                            ? "text-amber-500"
+                            : "text-emerald-500"
+                      }`}
+                    >
+                      {strength}
+                    </span>
+                  </div>
+                </div>
+              )}
+
+              {/* Password Validation Error */}
+              {errors.password && (
+                <p className="mt-1 text-sm text-red-500">
+                  {errors.password}
+                </p>
+              )}
+            </div>
           </div>
 
-          <div className="mt-8 flex items-center justify-between border-t border-slate-100 pt-6">
+          {/* Navigation Buttons */}
+          <div className="mt-7 flex items-center justify-between gap-4 border-t border-slate-100 pt-5">
             <button
               type="button"
               onClick={onBack}
-              className="rounded-lg border border-slate-200 px-6 py-3 text-sm font-medium text-slate-600 hover:bg-slate-50"
+              className="rounded-lg border border-slate-200 px-5 py-2.5 text-sm font-medium text-slate-600 transition hover:bg-slate-50 focus:outline-none focus:ring-4 focus:ring-slate-100"
             >
               ← Back
             </button>
 
             <button
               type="submit"
-              className="rounded-lg bg-blue-600 px-7 py-3 text-sm font-semibold text-white hover:bg-blue-700"
+              className="rounded-lg bg-blue-600 px-6 py-2.5 text-sm font-semibold text-white transition hover:bg-blue-700 focus:outline-none focus:ring-4 focus:ring-blue-100"
             >
               Next →
             </button>
