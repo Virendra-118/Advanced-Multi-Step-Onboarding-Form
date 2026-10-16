@@ -1,64 +1,66 @@
-function StepIndicator({ currentStep }) {
-  const steps = [
-    "Account",
-    "Business",
-    "Plan",
-    "Documents",
-    "Review",
-  ];
 
+const steps = [
+  "Account",
+  "Business",
+  "Plan",
+  "Documents",
+  "Review",
+];
+
+function StepIndicator({ currentStep = 0 }) {
   return (
-    <div className="w-full">
-      {/* Circles and Connecting Lines */}
-      <div className="flex w-full items-center">
-        {steps.map((step, index) => (
-          <div
-            key={step}
-            className="flex flex-1 items-center"
-          >
-            {/* Step Circle */}
-            <div
-              className={`z-10 flex h-9 w-9 shrink-0 items-center justify-center rounded-full text-sm font-medium ${
-                index <= currentStep
-                  ? "bg-blue-600 text-white"
-                  : "bg-gray-200 text-gray-500"
-              }`}
-            >
-              {index + 1}
-            </div>
+    <div className="mx-auto w-full max-w-3xl px-2 sm:px-4">
+      <div className="relative">
+        {/* Connecting line */}
+        <div className="absolute left-[10%] right-[10%] top-[18px] h-1 -translate-y-1/2 rounded-full bg-slate-200" />
 
-            {/* Connecting Line */}
-            {index < steps.length - 1 && (
+        {/* Completed connecting line */}
+        <div
+          className="absolute left-[10%] top-[18px] h-1 -translate-y-1/2 rounded-full bg-blue-600 transition-all duration-300"
+          style={{
+            width: `${(Math.min(currentStep, 4) / 4) * 80}%`,
+          }}
+        />
+
+        {/* Steps */}
+        <div className="relative grid grid-cols-5">
+          {steps.map((step, index) => {
+            const isCompleted = index < currentStep;
+            const isActive = index === currentStep;
+            const isHighlighted = isCompleted || isActive;
+
+            return (
               <div
-                className={`h-1 flex-1 rounded-full ${
-                  index < currentStep
-                    ? "bg-blue-600"
-                    : "bg-gray-200"
-                }`}
-              />
-            )}
-          </div>
-        ))}
-      </div>
+                key={step}
+                className="flex min-w-0 flex-col items-center"
+              >
+                {/* Circle */}
+                <div
+                  className={`z-10 flex h-9 w-9 shrink-0 items-center justify-center rounded-full border-2 text-sm font-medium transition-colors duration-300 ${
+                    isHighlighted
+                      ? "border-blue-600 bg-blue-600 text-white"
+                      : "border-slate-300 bg-white text-slate-600"
+                  }`}
+                >
+                  {index + 1}
+                </div>
 
-      {/* Step Names */}
-      <div className="mt-3 flex w-full">
-        {steps.map((step, index) => (
-          <div
-            key={step}
-            className="flex flex-1 justify-center"
-          >
-            <span
-              className={`whitespace-nowrap text-center text-xs sm:text-sm ${
-                index === currentStep
-                  ? "font-semibold text-blue-600"
-                  : "text-gray-600"
-              }`}
-            >
-              {step}
-            </span>
-          </div>
-        ))}
+                {/* Label directly below its circle */}
+                <span
+                  className={`mt-3 w-full text-center text-xs sm:text-sm ${
+                    isActive
+                      ? "font-semibold text-blue-600"
+                      : isCompleted
+                      ? "font-medium text-slate-700"
+                      : "text-slate-500"
+                  }`}
+                >
+                  {step}
+                </span>
+              </div>
+            );
+          })}
+        </div>
       </div>
     </div>
   );

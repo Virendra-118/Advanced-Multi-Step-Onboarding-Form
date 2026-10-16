@@ -1,3 +1,4 @@
+
 function FormField({
   label,
   type = "text",
@@ -29,7 +30,8 @@ function FormField({
         placeholder={placeholder}
         required={required}
         aria-invalid={Boolean(error)}
-        className={`w-full rounded-lg border px-4 py-3 text-sm outline-none focus:ring-2 ${
+        aria-describedby={error ? `${name}-error` : undefined}
+        className={`w-full rounded-lg border px-4 py-3 text-sm outline-none transition focus:ring-2 ${
           error
             ? "border-red-500 focus:border-red-500 focus:ring-red-100"
             : "border-slate-300 focus:border-blue-500 focus:ring-blue-100"
@@ -37,7 +39,11 @@ function FormField({
       />
 
       {error && (
-        <p className="mt-1 text-sm text-red-500">
+        <p
+          id={`${name}-error`}
+          className="mt-1 text-sm text-red-500"
+          role="alert"
+        >
           {error}
         </p>
       )}

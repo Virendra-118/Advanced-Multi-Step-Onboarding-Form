@@ -1,129 +1,46 @@
-// import StepIndicator from "../components/StepIndicator";
-// import FormField from "../components/FormField";
-
-// function AccountInformation({ onBack, onNext }) {
-//   return (
-//     <div className="flex min-h-screen items-center justify-center bg-slate-50 p-4 sm:p-6 md:p-8">
-//       <div className="w-full max-w-4xl rounded-2xl border border-blue-100 bg-white p-6 shadow-sm sm:p-8 md:p-10">
-
-//         {/* Progress Indicator */}
-//         <StepIndicator currentStep={0} />
-
-//         {/* Heading */}
-//         <div className="mt-8">
-//           <h1 className="text-2xl font-bold tracking-tight text-blue-950 sm:text-3xl">
-//             Create your account
-//           </h1>
-
-//           <p className="mt-2 text-sm leading-6 text-slate-500">
-//             Let's set up your basic information.
-//           </p>
-//         </div>
-
-//         {/* Account Form */}
-//         <div className="mt-7 space-y-5">
-//           <FormField
-//             label="Full Name"
-//             name="fullName"
-//             type="text"
-//             placeholder="Enter your full name"
-//             required
-//           />
-
-//           <FormField
-//             label="Email Address"
-//             name="email"
-//             type="email"
-//             placeholder="Enter your email"
-//             required
-//           />
-
-//           <FormField
-//             label="Password"
-//             name="password"
-//             type="password"
-//             placeholder="Enter your password"
-//             required
-//           />
-//         </div>
-
-//         {/* Footer Buttons */}
-//         <div className="mt-8 flex items-center justify-between border-t border-slate-100 pt-6">
-//           <button
-//             type="button"
-//             onClick={onBack}
-//             className="rounded-lg border border-slate-200 bg-white px-6 py-3 text-sm font-medium text-slate-600 transition hover:bg-slate-50"
-//           >
-//             ← Back
-//           </button>
-
-//           <button
-//             type="button"
-//             onClick={onNext}
-//             className="rounded-lg bg-blue-600 px-7 py-3 text-sm font-semibold text-white shadow-sm transition hover:bg-blue-700 focus:outline-none focus:ring-4 focus:ring-blue-100"
-//           >
-//             Next →
-//           </button>
-//         </div>
-
-//       </div>
-//     </div>
-//   );
-// }
-
-// export default AccountInformation;
-
 
 import { useState } from "react";
 import StepIndicator from "../components/StepIndicator";
 import FormField from "../components/FormField";
 import { validateAccountForm } from "../utils/validation";
+import { useOnboarding } from "../context/OnboardingContext";
 
 function AccountInformation({ onBack, onNext }) {
+  const { state, dispatch } = useOnboarding();
+  const [errors, setErrors] = useState({});
 
-    const [errors, setErrors] = useState({});
-  const [formData, setFormData] = useState({
-    fullName: "",
-    email: "",
-    password: "",
-  });
+  const formData = state.accountData;
 
   function handleChange(e) {
     const { name, value } = e.target;
 
-    setFormData({
-      ...formData,
-      [name]: value,
+    dispatch({
+      type: "UPDATE_ACCOUNT",
+      payload: { [name]: value },
     });
+
+    setErrors((prevErrors) => ({
+      ...prevErrors,
+      [name]: "",
+    }));
   }
 
-//   function handleSubmit(e) {
-//     e.preventDefault();
+  function handleSubmit(e) {
+    e.preventDefault();
 
-//     console.log("Account Information:", formData);
+    const validationErrors = validateAccountForm(formData);
+    setErrors(validationErrors);
 
-//     onNext();
-//   }
+    if (Object.keys(validationErrors).length > 0) {
+      return;
+    }
 
-function handleSubmit(e) {
-  e.preventDefault();
-
-  const validationErrors = validateAccountForm(formData);
-
-  setErrors(validationErrors);
-
-  if (Object.keys(validationErrors).length > 0) {
-    return;
+    onNext();
   }
-
-  console.log("Account Information:", formData);
-  onNext();
-}
 
   return (
     <div className="flex min-h-screen items-center justify-center bg-slate-50 p-4 md:p-8">
       <div className="w-full max-w-4xl rounded-2xl border border-blue-100 bg-white p-6 shadow-sm md:p-10">
-
         <StepIndicator currentStep={0} />
 
         <div className="mt-8">
@@ -189,16 +106,9 @@ function handleSubmit(e) {
             </button>
           </div>
         </form>
-
       </div>
     </div>
   );
 }
 
 export default AccountInformation;
-
-
-
-
-
-

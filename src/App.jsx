@@ -1,46 +1,92 @@
-import { useState } from "react";
+
 import Onboarding from "./pages/Onboarding";
 import AccountInformation from "./pages/AccountInformation";
 import BusinessInformation from "./pages/BusinessInformation";
 import ChoosePlan from "./pages/ChoosePlan";
 import UploadDocuments from "./pages/UploadDocuments";
+import Review from "./pages/Review";
+import Success from "./pages/Success";
+import { useOnboarding } from "./context/OnboardingContext";
 
 function App() {
-  const [step, setStep] = useState(0);
+  const { state, dispatch, saveSubmission } = useOnboarding();
+
+  const step = state.step;
+
+  function goToStep(nextStep) {
+    dispatch({
+      type: "SET_STEP",
+      payload: nextStep,
+    });
+  }
+
+  function handleSubmit() {
+    const saved = saveSubmission();
+
+    if (!saved) {
+      alert("Unable to save your data. Please try again.");
+      return;
+    }
+
+    alert("Onboarding submitted successfully!");
+    goToStep(6);
+  }
 
   return (
     <>
+      {/* Welcome Page */}
       {step === 0 && (
-        <Onboarding onGetStarted={() => setStep(1)} />
+        <Onboarding onGetStarted={() => goToStep(1)} />
       )}
 
+      {/* Account Information */}
       {step === 1 && (
         <AccountInformation
-          onBack={() => setStep(0)}
-          onNext={() => setStep(2)}
+          onBack={() => goToStep(0)}
+          onNext={() => goToStep(2)}
         />
       )}
 
+      {/* Business Information */}
       {step === 2 && (
         <BusinessInformation
-          onBack={() => setStep(1)}
-          onNext={() => setStep(3)}
+          onBack={() => goToStep(1)}
+          onNext={() => goToStep(3)}
         />
       )}
 
+      {/* Choose Plan */}
       {step === 3 && (
         <ChoosePlan
-          onBack={() => setStep(2)}
-          onNext={() => setStep(4)}
+          onBack={() => goToStep(2)}
+          onNext={() => goToStep(4)}
         />
       )}
 
+      {/* Upload Documents */}
       {step === 4 && (
         <UploadDocuments
-          onBack={() => setStep(3)}
-          onNext={() => alert("Review page coming next!")}
+          onBack={() => goToStep(3)}
+          onNext={() => goToStep(5)}
         />
       )}
+
+      {/* Review & Submit */}
+      {step === 5 && (
+        <Review
+          onBack={() => goToStep(4)}
+          onSubmit={handleSubmit}
+          onEditAccount={() => goToStep(1)}
+          onEditBusiness={() => goToStep(2)}
+          onEditPlan={() => goToStep(3)}
+          onEditDocuments={() => goToStep(4)}
+        />
+      )}
+
+      {/* Success Page */}
+      {step === 6 && (
+  <Success onGoToDashboard={() => goToStep(0)} />
+)}
     </>
   );
 }

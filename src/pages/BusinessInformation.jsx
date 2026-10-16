@@ -1,28 +1,34 @@
-import { useState } from "react";
+
 import StepIndicator from "../components/StepIndicator";
 import FormField from "../components/FormField";
+import { useOnboarding } from "../context/OnboardingContext";
 
 function BusinessInformation({ onBack, onNext }) {
-  const [businessData, setBusinessData] = useState({
-    accountType: "Business",
-    businessName: "",
-    companySize: "",
-    industry: "",
-  });
+  const { state, dispatch } = useOnboarding();
+  const businessData = state.businessData;
 
   function handleChange(e) {
     const { name, value } = e.target;
 
-    setBusinessData({
-      ...businessData,
-      [name]: value,
+    dispatch({
+      type: "UPDATE_BUSINESS",
+      payload: {
+        [name]: value,
+      },
+    });
+  }
+
+  function handleAccountTypeChange(type) {
+    dispatch({
+      type: "UPDATE_BUSINESS",
+      payload: {
+        accountType: type,
+      },
     });
   }
 
   function handleSubmit(e) {
     e.preventDefault();
-
-    console.log("Business Information:", businessData);
     onNext();
   }
 
@@ -51,12 +57,7 @@ function BusinessInformation({ onBack, onNext }) {
               <button
                 key={type}
                 type="button"
-                onClick={() =>
-                  setBusinessData({
-                    ...businessData,
-                    accountType: type,
-                  })
-                }
+                onClick={() => handleAccountTypeChange(type)}
                 className={`flex items-center gap-2 rounded-lg border p-3 text-sm font-medium transition ${
                   businessData.accountType === type
                     ? "border-blue-500 bg-blue-50 text-blue-700"
@@ -106,7 +107,8 @@ function BusinessInformation({ onBack, onNext }) {
                     htmlFor="companySize"
                     className="mb-2 block text-sm font-medium text-slate-700"
                   >
-                    Company Size <span className="text-red-500">*</span>
+                    Company Size{" "}
+                    <span className="text-red-500">*</span>
                   </label>
 
                   <select
@@ -132,7 +134,8 @@ function BusinessInformation({ onBack, onNext }) {
                     htmlFor="industry"
                     className="mb-2 block text-sm font-medium text-slate-700"
                   >
-                    Industry <span className="text-red-500">*</span>
+                    Industry{" "}
+                    <span className="text-red-500">*</span>
                   </label>
 
                   <select

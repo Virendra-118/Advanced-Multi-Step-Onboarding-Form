@@ -1,4 +1,20 @@
+
+import { useEffect, useState } from "react";
+
 function FileUpload({ label, files = [], onChange }) {
+  const [previewFile, setPreviewFile] = useState(null);
+
+  // Clean up the temporary preview URL when the preview changes
+  useEffect(() => {
+    if (!previewFile) return;
+
+    const fileURL = URL.createObjectURL(previewFile);
+
+    return () => {
+      URL.revokeObjectURL(fileURL);
+    };
+  }, [previewFile]);
+
   function handleFileChange(e) {
     const newFiles = Array.from(e.target.files);
 
@@ -7,18 +23,24 @@ function FileUpload({ label, files = [], onChange }) {
     // Allow selecting the same file again
     e.target.value = "";
   }
+
   function handleViewFile(file) {
     const fileURL = URL.createObjectURL(file);
     const newTab = window.open(fileURL, "_blank");
 
     if (!newTab) {
       URL.revokeObjectURL(fileURL);
+    } else {
+      // Revoke the temporary URL after the new tab has had time to load
+      setTimeout(() => URL.revokeObjectURL(fileURL), 60000);
     }
   }
+
   function handleRemoveFile(indexToRemove) {
     const updatedFiles = files.filter(
       (_, index) => index !== indexToRemove
     );
+
     onChange(updatedFiles);
   }
 

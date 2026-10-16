@@ -1,4 +1,5 @@
 import welcomeImage from "../assets/Project_Welcome_page.jpg";
+
 function Onboarding({ onGetStarted }) {
   const steps = [
     "Create your account",
@@ -7,16 +8,16 @@ function Onboarding({ onGetStarted }) {
     "Upload documents",
     "Review & submit",
   ];
-  return (
-    <div className="min-h-screen bg-slate-50 flex items-center justify-center p-4 md:p-8">
-      <div className="w-full max-w-5xl rounded-2xl bg-white border border-blue-100 p-6 md:p-10 shadow-sm">
 
+  return (
+    <div className="flex min-h-screen items-center justify-center bg-slate-50 p-4 md:p-8">
+      <div className="w-full max-w-5xl rounded-2xl border border-blue-100 bg-white p-6 shadow-sm md:p-10">
+        {/* Logo */}
         <h1 className="text-xl font-bold text-blue-950">
           DevFlow
         </h1>
 
         <div className="mt-8 grid items-center gap-8 md:grid-cols-2">
-
           {/* Welcome Content */}
           <div>
             <h2 className="text-3xl font-bold text-blue-950">
@@ -28,6 +29,7 @@ function Onboarding({ onGetStarted }) {
               to create your account and start your journey.
             </p>
 
+            {/* Onboarding Steps */}
             <ul className="mt-6 space-y-4">
               {steps.map((step) => (
                 <li
@@ -42,7 +44,10 @@ function Onboarding({ onGetStarted }) {
 
             <p className="mt-8 text-sm text-slate-500">
               Already have an account?{" "}
-              <a href="#" className="text-blue-600 hover:underline">
+              <a
+                href="#"
+                className="text-blue-600 hover:underline"
+              >
                 Sign in
               </a>
             </p>
@@ -53,22 +58,21 @@ function Onboarding({ onGetStarted }) {
             <img
               src={welcomeImage}
               alt="Team collaborating on a project"
-              className="w-full max-w-lg h-auto object-contain"
+              className="h-auto w-full max-w-lg object-contain"
             />
           </div>
-
         </div>
 
         {/* Get Started Button */}
         <div className="mt-8 flex justify-end border-t border-slate-100 pt-6">
           <button
+            type="button"
             onClick={onGetStarted}
-            className="rounded-lg bg-blue-600 px-6 py-3 text-sm font-semibold text-white hover:bg-blue-700 transition"
+            className="rounded-lg bg-blue-600 px-6 py-3 text-sm font-semibold text-white transition hover:bg-blue-700"
           >
             Get Started →
           </button>
         </div>
-
       </div>
     </div>
   );

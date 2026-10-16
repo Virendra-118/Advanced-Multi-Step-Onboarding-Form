@@ -1,19 +1,26 @@
-import { useState } from "react";
+
 import StepIndicator from "../components/StepIndicator";
 import FileUpload from "../components/FileUpload";
+import { useOnboarding } from "../context/OnboardingContext";
 
 function UploadDocuments({ onBack, onNext }) {
-  const [files, setFiles] = useState([]);
+  const { state, dispatch } = useOnboarding();
+  const files = state.files;
+
+  function handleFilesChange(updatedFiles) {
+    dispatch({
+      type: "SET_FILES",
+      payload: updatedFiles,
+    });
+  }
 
   function handleSubmit() {
-    console.log("Selected Documents:", files);
     onNext();
   }
 
   return (
     <div className="flex min-h-screen items-center justify-center bg-slate-50 p-4 md:p-8">
       <div className="w-full max-w-4xl rounded-2xl border border-blue-100 bg-white p-6 shadow-sm md:p-10">
-
         <StepIndicator currentStep={3} />
 
         <div className="mt-8">
@@ -30,7 +37,7 @@ function UploadDocuments({ onBack, onNext }) {
           <FileUpload
             label="Upload Documents"
             files={files}
-            onChange={setFiles}
+            onChange={handleFilesChange}
           />
         </div>
 
@@ -51,7 +58,6 @@ function UploadDocuments({ onBack, onNext }) {
             Next →
           </button>
         </div>
-
       </div>
     </div>
   );
