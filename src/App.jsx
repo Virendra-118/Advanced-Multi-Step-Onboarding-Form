@@ -11,9 +11,7 @@ import { useOnboarding } from "./context/OnboardingContext";
 
 function App() {
   const { state, dispatch, saveSubmission } = useOnboarding();
-
   const { dispatchToast } = useToastController("devflow-toaster");
-
   const step = state.step;
 
   function goToStep(nextStep) {
@@ -22,7 +20,6 @@ function App() {
       payload: nextStep,
     });
   }
-
   function handleSubmit() {
     // Save the onboarding submission, if your context provides this function.
     if (typeof saveSubmission === "function") {
