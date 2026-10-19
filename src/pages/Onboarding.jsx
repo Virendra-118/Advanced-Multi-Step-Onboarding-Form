@@ -18,6 +18,7 @@ function Onboarding({ onGetStarted }) {
           DevFlow
         </h1>
 
+
         {/* Main Content */}
         <div className="mt-5 grid grid-cols-1 items-center gap-5 sm:mt-6 sm:gap-6 md:grid-cols-[1fr_0.95fr] md:gap-3">
           {/* Left: Welcome Text */}

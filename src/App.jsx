@@ -23,7 +23,7 @@ function App() {
   function handleSubmit() {
     // Save the onboarding submission, if your context provides this function.
     if (typeof saveSubmission === "function") {
-      saveSubmission();
+      saveSubmission()
     }
 
     // Show a Fluent UI toast instead of a browser alert.
@@ -43,6 +43,7 @@ function App() {
   }
 
   return (
+
     <FluentProvider theme={webLightTheme}>
       <Toaster
         toasterId="devflow-toaster"
